@@ -9,7 +9,7 @@ from config.settings import API_URL
 class TestTasksAPI:
 
     @allure.title("Получение списка досок")
-    def test_get_boards(self, api_client):
+    def test_get_boards(self, api_client) -> None:
         url = f"{API_URL}/boards"
         with allure.step(f"Отправить GET запрос на {url}"):
             response = api_client.get(url)
@@ -27,7 +27,7 @@ class TestTasksAPI:
             )
 
     @allure.title("Создание задачи")
-    def test_create_task(self, api_client, column_id):
+    def test_create_task(self, api_client, column_id) -> None:
         url = f"{API_URL}/tasks"
         payload = {"title": "Новая задача API", "columnId": column_id}
         with allure.step(
@@ -45,7 +45,7 @@ class TestTasksAPI:
             )
 
     @allure.title("Обновление задачи")
-    def test_update_task(self, api_client, column_id):
+    def test_update_task(self, api_client, column_id) -> None:
         # Создаём задачу, чтобы получить её id
         create_payload = {"title": "Старое название", "columnId": column_id}
         create_response = api_client.post(
@@ -90,7 +90,7 @@ class TestTasksAPI:
             )
 
     @allure.title("Создание задачи без title (негативный)")
-    def test_create_task_missing_title(self, api_client, column_id):
+    def test_create_task_missing_title(self, api_client, column_id) -> None:
         url = f"{API_URL}/tasks"
         payload = {"columnId": column_id}
         with allure.step("Отправить POST запрос без title"):
@@ -99,11 +99,8 @@ class TestTasksAPI:
             assert response.status_code == 400
 
     @allure.title("Получение несуществующей задачи (негативный)")
-    def test_get_nonexistent_task(self, api_client):
-        url = (
-            f"{API_URL}/tasks/"
-            "00000000"
-        )
+    def test_get_nonexistent_task(self, api_client) -> None:
+        url = f"{API_URL}/tasks/00000000"
         with allure.step(f"Отправить GET запрос на {url}"):
             response = api_client.get(url)
         with allure.step("Проверить статус-код 404"):

@@ -4,6 +4,12 @@
 
 В проекте реализованы автоматизированные тесты для веб-интерфейса и REST API с использованием **Python, Pytest, Selenium, Requests и Allure Report**.
 
+## Страница проекта
+
+Полная документация дипломного проекта, тест-план, тестовая документация и результаты тестирования размещенны в Yonote:
+
+[Открыть страницу проекта в Yonote](https://testengineer25.yonote.ru/share/2438b8f0-5d31-4f96-a28a-12453d150fb6)
+
 ## Содержание
 
 * [Описание проекта](#описание-проекта)
@@ -125,7 +131,7 @@ qa-diploma-project/
 Клонируйте репозиторий проекта:
 
 ```powershell
-git clone <URL_репозитория>
+git clone <https://github.com/trofimenko-anton/qa-diploma-project>
 cd qa-diploma-project
 ```
 
@@ -173,7 +179,7 @@ YOUGILE_LOGIN=your_email@example.com
 YOUGILE_PASSWORD=your_password
 YOUGILE_TOKEN=your_api_token
 BROWSER=chrome
-```
+
 
 ### Назначение переменных
 
@@ -282,7 +288,7 @@ allure serve allure-results
 ### Полный пример запуска в PowerShell
 
 ```powershell
-git clone <URL_репозитория>
+git clone <https://github.com/trofimenko-anton/qa-diploma-project>
 cd qa-diploma-project
 
 python -m venv venv

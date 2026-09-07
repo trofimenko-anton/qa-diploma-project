@@ -3,6 +3,8 @@ import allure
 import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.firefox.options import Options as FirefoxOptions
+from selenium.webdriver.edge.options import Options as EdgeOptions
 from config.settings import BASE_URL, LOGIN, PASSWORD, TOKEN, API_URL, BROWSER
 from pages.login_page import LoginPage
 
@@ -19,10 +21,16 @@ def api_client():
 
 @pytest.fixture(scope="function")
 def driver():
-    with allure.step("Запустить браузер Chrome"):
+    with allure.step("Запустить браузер"):
         if BROWSER.lower() == "chrome":
             options = ChromeOptions()
             driver = webdriver.Chrome(options=options)
+        elif BROWSER.lower() == "firefox":
+            options = FirefoxOptions()
+            driver = webdriver.Firefox(options=options)
+        elif BROWSER.lower() == "edge":
+            options = EdgeOptions()
+            driver = webdriver.Edge(options=options)
         else:
             raise ValueError(f"Unsupported browser: {BROWSER}")
         driver.maximize_window()
@@ -53,8 +61,7 @@ def column_id(api_client):
             "users": {user_id: "admin"}
         }
         project_response = api_client.post(
-            f"{API_URL}/projects",
-            json=project_payload
+            f"{API_URL}/projects", json=project_payload
         )
         assert project_response.status_code in [200, 201]
         project_id = project_response.json()["id"]
@@ -73,8 +80,7 @@ def column_id(api_client):
             }
         }
         board_response = api_client.post(
-            f"{API_URL}/boards",
-            json=board_payload
+            f"{API_URL}/boards", json=board_payload
         )
         assert board_response.status_code in [200, 201]
         board_id = board_response.json()["id"]
@@ -86,8 +92,7 @@ def column_id(api_client):
             "boardId": board_id
         }
         column_response = api_client.post(
-            f"{API_URL}/columns",
-            json=column_payload
+            f"{API_URL}/columns", json=column_payload
         )
         assert column_response.status_code in [200, 201]
         col_id = column_response.json()["id"]

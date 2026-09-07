@@ -1,6 +1,8 @@
 import uuid
 import allure
 import pytest
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from pages.login_page import LoginPage
 from pages.boards_page import BoardsPage
 from pages.tasks_page import TasksPage
@@ -26,10 +28,27 @@ class TestUI:
     def test_create_project(self, logged_in_driver):
         boards_page = BoardsPage(logged_in_driver)
         project_title = f"Проект для UI {uuid.uuid4().hex[:6]}"
+
         with allure.step(f"Создать проект '{project_title}'"):
             boards_page.create_project(project_title)
-        with allure.step("Проверить, что перешли на страницу проекта"):
-            assert "/team/" in logged_in_driver.current_url
+
+        with allure.step("Обновить страницу"):
+            logged_in_driver.refresh()
+
+        with allure.step("Дождаться загрузки списка проектов"):
+            WebDriverWait(logged_in_driver, 10).until(
+                EC.visibility_of_element_located(
+                    boards_page.PROJECTS_LIST
+                )
+            )
+
+        with allure.step(
+            f"Проверить, что проект '{project_title}' сохранился"
+        ):
+            assert boards_page.is_project_present(project_title), (
+                f"Проект '{project_title}' "
+                "не найден после обновления страницы"
+            )
 
     @allure.title("Добавление задачи в колонку")
     def test_add_task(self, logged_in_driver):
@@ -48,7 +67,10 @@ class TestUI:
     @allure.title("Просмотр/редактирование задачи")
     def test_edit_task(self, logged_in_driver):
         boards_page = BoardsPage(logged_in_driver)
-        project_title = f"Проект для редактирования {uuid.uuid4().hex[:6]}"
+        project_title = (
+            f"Проект для редактирования "
+            f"{uuid.uuid4().hex[:6]}"
+        )
         with allure.step(f"Создать проект '{project_title}'"):
             boards_page.create_project(project_title)
 
